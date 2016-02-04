@@ -1,14 +1,10 @@
 <?php
 	
-	$db_host = "127.0.0.1";
-	$db_name ="db_ticketsystem";
-	$db_user = "root";
-	$db_pass = "";
-	$error = '';
+	include('database.php');
+	
+	$ticket_errors = array();
 	$db_connection = dataBase($db_host,$db_name,$db_user,$db_pass);
 	
-	
-
 	class Ticket {
 		
 		public $submitted_date;
@@ -37,30 +33,24 @@
 	if($_POST['username'] !== '') {
 		$input_name = filter_var($_POST['username'], FILTER_SANITIZE_STRING); 
 	} else {
-		$error = "Username is not valid.". "<br />";
-		echo $error;
-		echo "<br /> <br />";
+		array_push($ticket_errors, "Username is not valid.");
 	}
 	
 	if($_POST['subject'] !== '') {
 		$input_subj = filter_var($_POST['subject'], FILTER_SANITIZE_STRING); 
 	} else {
-		$error = "Subject is not valid.". "<br />";
-		echo $error;
-		echo "<br /> <br />";
+		array_push($ticket_errors, "Subject is not valid.");
 	}
 
 	if($_POST['description'] != '') {
 		$input_desc = filter_var($_POST['description'], FILTER_SANITIZE_STRING); 
 	} else {
-		$error = "Description is not valid.". "<br />";
-		echo $error;
-		echo "<br /> <br />";
+		array_push($ticket_errors, "Description is not valid.");
 	}
 
 	
 
-	if($error === ''){
+	if($ticket_errors === ''){
 	
 		$ticket = new Ticket($input_name, $input_subj, $input_desc);
 		var_dump($ticket);
@@ -68,29 +58,14 @@
 		insertTicket($db_connection,$ticket);
 
 	} else {
-		echo $error;
-		echo "<br /> <br />";
+		array_push($ticket_errors, "ERROR-Failed to create new ticket.");
 	}
 
 	displayTickets($db_connection);
 
+	print_r(array_values($ticket_errors));
 
-	//Accepts database credentials and attempts to connect to the database
-	function dataBase($db_host,$db_name,$db_user,$db_pass){
-		try{
-			
-			$DBH = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
-			$DBH->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			return $DBH;
-		
-		} catch (PDOException $e) {
-			
-			error_log($e);
-			return "ERROR - failed to connect.";
-
-		}
-		
-	}
+	
 
 	//Accepts a database connection  and a ticket and attempts to insert a ticket into the database
 	function insertTicket($dbConnection, $ticket){
@@ -108,7 +83,7 @@
 		}
 	}
 
-	
+
 	function displayTickets($dbConnection){
 		try {
 			$stmt = $dbConnection->query('SELECT submitted_date,submitted_by,assigned_to,subject,description,status FROM tickets');

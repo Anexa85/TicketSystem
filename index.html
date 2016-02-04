@@ -5,5 +5,47 @@
 </head>
 <body>
 
+<form action="create-ticket.php" method="post">
+ <p>Your username: <input type="text" name="username" /></p>
+ <!-- <p>Date: <input type="text" name="date" /></p> -->
+ <p>Ticket Subject: <input type="text" name="subject" /></p>
+ <p>Ticket Description: <textarea name="description" /></textarea></p>
+ <p><input type="submit" /></p>
+</form>
+<br />
+<h2>Create a User!</h2>
+
+<form action="create-user.php" method="post">
+ <p>First Name: <input type="text" name="firstname" /></p>
+ <!-- <p>Date: <input type="text" name="date" /></p> -->
+ <p>Last Name: <input type="text" name="lastname" /></p>
+ <p>E-mail: <input type="email" name="email" /></p> 
+ <p>Desired Username: <input type="text" name="username" /></p>
+ <p>Password: <input type="password" name="password" /></p>
+ <p>Enter Password Again: <input type="password" name="password_verify" /></p>
+ 
+
+ <fieldset>
+  <legend>Authority Level</legend>
+  <ul>
+    <li>
+      <label for="admin">
+        <input type="radio" id="radio_1" name="authority" value="admin" />
+        Administrator
+      </label>
+    </li>
+    <li>
+      <label for="non_admin">
+        <input type="radio" id="radio_2" name="authority" value="non_admin." />
+        Regular User
+      </label>
+    </li>
+  </ul>
+ </fieldset>
+ 
+
+ <p><input type="submit" /></p>
+</form>
+
 </body>
 </html>
